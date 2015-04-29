@@ -1,0 +1,1527 @@
+<!doctype html>
+
+<head>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<meta charset="utf-8">
+<title>Combined Wave-Current Bottom Stress, USGS</title>
+<meta name="publisher" content="USGS - U.S. Geological Survey, Coastal and Marine Geology Program, Woods Hole Science Center"/>
+<meta name="author" content="Chris Sherwood" />
+<meta name="description" content="This Javascript app implements Eqns. 3-39 and 3-40 from the Shore Protection Manual."/>
+<meta name="keywords" content="Woods Hole Coastal and Marine Science Center, U.S. Geological Survey, Coastal and Marine Geology Program,  Coastal Model Tool Set, sediment transport, modeling, "/>
+
+
+    <meta name="created" content="20150406"/> 
+	<meta name="expires" content="never"/>
+    <meta name="copyright" content="none"/>
+    <meta name="revised" content=""/>
+<meta name="state" content="Massachusetts"/>
+<meta name="city" content="Woods Hole"/>
+<meta name="zip" content="02543"/>
+<meta name="country" content="United States of America"/>
+<meta name="language" value="EN"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+  font-family: sans-serif; /* 1 */
+  -ms-text-size-adjust: 100%; /* 2 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/**
+ * Remove default margin.
+ */
+
+body {
+  margin: 0;
+}
+
+/* HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined for any HTML5 element in IE 8/9.
+ * Correct `block` display not defined for `details` or `summary` in IE 10/11
+ * and Firefox.
+ * Correct `block` display not defined for `main` in IE 11.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/**
+ * 1. Correct `inline-block` display not defined in IE 8/9.
+ * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
+ */
+
+audio,
+canvas,
+progress,
+video {
+  display: inline-block; /* 1 */
+  vertical-align: baseline; /* 2 */
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Address `[hidden]` styling not present in IE 8/9/10.
+ * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
+ */
+
+[hidden],
+template {
+  display: none;
+}
+
+/* Links
+   ========================================================================== */
+
+/**
+ * Remove the gray background color from active links in IE 10.
+ */
+
+a {
+  background-color: transparent;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+  outline: 0;
+}
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
+ */
+
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
+ */
+
+b,
+strong {
+  font-weight: bold;
+}
+
+/**
+ * Address styling not present in Safari and Chrome.
+ */
+
+dfn {
+  font-style: italic;
+}
+
+/**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari, and Chrome.
+ */
+
+h1 {
+  font-size: 1.5em;
+  margin: 0.67em 0;
+}
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+
+mark {
+  background: #ff0;
+  color: #000;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove border when inside `a` element in IE 8/9/10.
+ */
+
+img {
+  border: 0;
+}
+
+/**
+ * Correct overflow not hidden in IE 9/10/11.
+ */
+
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 8/9 and Safari.
+ */
+
+figure {
+  margin: 1em 40px;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ */
+
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+/**
+ * Contain overflow in all browsers.
+ */
+
+pre {
+  overflow: auto;
+}
+
+/**
+ * Address odd `em`-unit font size rendering in all browsers.
+ */
+
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * Known limitation: by default, Chrome and Safari on OS X allow very limited
+ * styling of `select`, unless a `border` property is set.
+ */
+
+/**
+ * 1. Correct color not being inherited.
+ *    Known issue: affects color of disabled elements.
+ * 2. Correct font properties not being inherited.
+ * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit; /* 1 */
+  font: inherit; /* 2 */
+  margin: 0; /* 3 */
+}
+
+/**
+ * Address `overflow` set to `hidden` in IE 8/9/10/11.
+ */
+
+button {
+  overflow: visible;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
+ * Correct `select` style inheritance in Firefox.
+ */
+
+button,
+select {
+  text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button; /* 2 */
+  cursor: pointer; /* 3 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+input {
+  line-height: normal;
+  max-width:60px;
+}
+
+/**
+ * It's recommended that you don't attempt to style these elements.
+ * Firefox's implementation doesn't respect box-sizing, padding, or width.
+ *
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+ * Fix the cursor style for Chrome's increment/decrement buttons. For certain
+ * `font-size` values of the `input`, it causes the cursor style of the
+ * decrement button to change from `default` to `text`.
+ */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box; /* 2 */
+  box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari and Chrome on OS X.
+ * Safari (but not Chrome) clips the cancel button when the search input has
+ * padding (and `textfield` appearance).
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct `color` not being inherited in IE 8/9/10/11.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+
+legend {
+  border: 0; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+ * Remove default vertical scrollbar in IE 8/9/10/11.
+ */
+
+textarea {
+  overflow: auto;
+}
+
+/**
+ * Don't inherit the `font-weight` (applied by a rule above).
+ * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
+ */
+
+optgroup {
+  font-weight: bold;
+}
+
+/* Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+/*
+* Skeleton V2.0.4
+* Copyright 2014, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 12/29/2014
+*/
+
+
+/* Table of contents
+––––––––––––––––––––––––––––––––––––––––––––––––––
+- Grid
+- Base Styles
+- Typography
+- Links
+- Buttons
+- Forms
+- Lists
+- Code
+- Tables
+- Spacing
+- Utilities
+- Clearing
+- Media Queries
+*/
+
+
+/* Grid
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box; }
+.column,
+.columns {
+ /* width: 100%; */
+  float: left;
+  box-sizing: border-box;
+   margin-left:5px;
+   margin-right:5px;
+   padding-left:5px;
+   padding-right:5px;
+   min-width:28.66%}
+
+/* For devices larger than 400px */
+@media (min-width: 400px) {
+  .container {
+    width: 90%;
+    padding: 0; }
+}
+
+/* For devices larger than 550px */
+@media (min-width: 550px) {
+  .container {
+    width: 80%; }
+  .column,
+  .columns {
+    margin-left: 2%; 
+	min-width:30.66%}
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0; }
+
+  .one.column,
+  .one.columns                    { width: 4.66666666667%; }
+  .two.columns                    { width: 13.3333333333%; }
+  .three.columns                  { width: 22%;            }
+  .four.columns                   { width: 30.6666666667%; }
+  .five.columns                   { width: 39.3333333333%; }
+  .six.columns                    { width: 48%;            }
+  .seven.columns                  { width: 56.6666666667%; }
+  .eight.columns                  { width: 65.3333333333%; }
+  .nine.columns                   { width: 74.0%;          }
+  .ten.columns                    { width: 82.6666666667%; }
+  .eleven.columns                 { width: 91.3333333333%; }
+  .twelve.columns                 { width: 100%; margin-left: 0; }
+
+  .one-third.column               { width: 30.6666666667%; margin-left:5px;}
+  .two-thirds.column              { width: 65.3333333333%; }
+
+  .one-half.column                { width: 48%; }
+  
+  .one-fourth.column                {width: 23.3333%; }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns          { margin-left: 8.66666666667%; }
+  .offset-by-two.column,
+  .offset-by-two.columns          { margin-left: 17.3333333333%; }
+  .offset-by-three.column,
+  .offset-by-three.columns        { margin-left: 26%;            }
+  .offset-by-four.column,
+  .offset-by-four.columns         { margin-left: 34.6666666667%; }
+  .offset-by-five.column,
+  .offset-by-five.columns         { margin-left: 43.3333333333%; }
+  .offset-by-six.column,
+  .offset-by-six.columns          { margin-left: 52%;            }
+  .offset-by-seven.column,
+  .offset-by-seven.columns        { margin-left: 60.6666666667%; }
+  .offset-by-eight.column,
+  .offset-by-eight.columns        { margin-left: 69.3333333333%; }
+  .offset-by-nine.column,
+  .offset-by-nine.columns         { margin-left: 78.0%;          }
+  .offset-by-ten.column,
+  .offset-by-ten.columns          { margin-left: 86.6666666667%; }
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns       { margin-left: 95.3333333333%; }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns    { margin-left: 34.6666666667%; }
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns   { margin-left: 69.3333333333%; }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns     { margin-left: 52%; }
+
+}
+
+
+/* Base Styles
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* NOTE
+html is set to 62.5% so that all the REM measurements throughout Skeleton
+are based on 10px sizing. So basically 1.5rem = 15px :) */
+html {
+  font-size: 62.5%; }
+body {
+  font-size: 1.25em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.2;
+  font-weight: 400;
+  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #222; }
+
+
+/* Typography
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+   margin-bottom: .75rem;
+  font-weight: 300; }
+h1 { font-size: 2.8rem; line-height: 1.2;  letter-spacing: -.1rem;}
+h2 { font-size: 2.6rem; line-height: 1.25; letter-spacing: -.1rem; }
+h3 { font-size: 2.4rem; line-height: 1.3;  letter-spacing: -.1rem; }
+h4 { font-size: 2.0rem; line-height: 1.35; letter-spacing: -.08rem; }
+h5 { font-size: 1.8rem; line-height: 1.5;  letter-spacing: -.05rem; }
+h6 { font-size: 1.6rem; line-height: 1.6;  letter-spacing: 0; }
+
+/* Larger than phablet */
+@media (min-width: 550px) {
+  h1 { font-size: 2.8rem; }
+  h2 { font-size: 2.6rem; }
+  h3 { font-size: 2.4rem; }
+  h4 { font-size: 2.0rem; }
+  h5 { font-size: 1.8rem; }
+  h6 { font-size: 1.6rem; }
+}
+
+p {
+  margin-top: 0; }
+
+
+/* Links
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+a {
+  color: #00264C; }
+a:hover {
+  color: #0FA0CE; }
+
+
+/* Buttons
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-block;
+  height: 38px;
+  padding: 0 30px;
+  color: #555;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 38px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  box-sizing: border-box; }
+.button:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover,
+.button:focus,
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus {
+  color: #333;
+  border-color: #888;
+  outline: 0; }
+.button.button-primary,
+button.button-primary,
+input[type="submit"].button-primary,
+input[type="reset"].button-primary,
+input[type="button"].button-primary {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; }
+.button.button-primary:hover,
+button.button-primary:hover,
+input[type="submit"].button-primary:hover,
+input[type="reset"].button-primary:hover,
+input[type="button"].button-primary:hover,
+.button.button-primary:focus,
+button.button-primary:focus,
+input[type="submit"].button-primary:focus,
+input[type="reset"].button-primary:focus,
+input[type="button"].button-primary:focus {
+  color: #FFF;
+  background-color: #00264C;
+  border-color: #00264C; }
+
+
+/* Forms
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+  height: 28px;
+  padding: 6px 5px; /* The 6px vertically centers text on FF, ignored by Webkit */
+  background-color: #fff;
+  border: 1px solid #D1D1D1;
+  border-radius: 4px;
+  box-shadow: none;
+  box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; }
+textarea {
+  min-height: 65px;
+  padding-top: 6px;
+  padding-bottom: 6px; }
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+  border: 1px solid #33C3F0;
+  outline: 0; }
+label,
+legend {
+  display: block;
+  margin-bottom: .5rem;
+  font-weight: 600; }
+fieldset {
+  padding: 0;
+  border-width: 0; }
+input[type="checkbox"],
+input[type="radio"] {
+  display: inline; }
+label > .label-body {
+  display: inline-block;
+  margin-left: .5rem;
+  font-weight: normal; }
+
+
+/* Lists
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ul {
+  list-style: circle inside; }
+ol {
+  list-style: decimal inside; }
+ol, ul {
+  padding-left: 0;
+  margin-top: 0; }
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%; }
+li {
+  margin-bottom: 1rem; }
+
+
+/* Code
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+code {
+  padding: .2rem .5rem;
+  margin: 0 .2rem;
+  font-size: 90%;
+  white-space: nowrap;
+  background: #F1F1F1;
+  border: 1px solid #E1E1E1;
+  border-radius: 4px; }
+pre > code {
+  display: block;
+  padding: 1rem 1.5rem;
+  white-space: pre; }
+
+
+/* Tables
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #E1E1E1; }
+th:first-child,
+td:first-child {
+  padding-left: 0; }
+th:last-child,
+td:last-child {
+  padding-right: 0; }
+
+
+/* Spacing
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+button,
+.button {
+  margin-bottom: 1rem; }
+input,
+textarea,
+select,
+fieldset {
+   margin-bottom: .75rem;
+ }
+pre,
+blockquote,
+dl,
+figure,
+table,
+p,
+ul,
+ol,
+form {
+   margin-bottom: 1.25rem; }
+
+.units {
+	 min-width:130px; }
+/* Utilities
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box; }
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box; }
+.u-pull-right {
+  float: right; }
+.u-pull-left {
+  float: left; }
+
+
+/* Misc
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+hr {
+  margin-top: .75rem;
+  margin-bottom: .75rem;
+  border-width: 0;
+  border-top: 1px solid #E1E1E1; }
+
+
+/* Clearing
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/* Self Clearing Goodness */
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both; }
+
+
+/* Media Queries
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/*
+Note: The best way to structure the use of media queries is to create the queries
+near the relevant code. For example, if you wanted to change the styles for buttons
+on small devices, paste the mobile query code up in the buttons section and style it
+there.
+*/
+
+
+/* Larger than mobile */
+@media (min-width: 400px) {}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 550px) {}
+
+/* Larger than tablet */
+@media (min-width: 750px) {}
+
+/* Larger than desktop */
+@media (min-width: 1000px) {}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {}
+
+#usgsfooter {
+	margin-top: 15px;
+	font-size: 85%;
+}
+
+#usgsfooterbar {
+	/*background-color: #61639E;*/
+	background-color: #00264C;
+	padding: 4px;
+	margin: 0;
+	border-top: 3px solid #00264C;
+}
+
+#usgsfooterbar a:link, #usgsfooterbar a:visited {
+	margin-right: 40px;
+	color: #fff;
+	text-decoration: none;
+	font-weight:bold;
+}
+#usgsfooterbar a:hover {
+	margin-right: 40px;
+	color: #000;
+	text-decoration: underline;
+}
+#usgsfooterbar a:active {
+	margin-right: 40px;
+	color: #aaa;
+	text-decoration: none;
+}
+#usgsfootertext {
+	padding: 4px;
+	margin: 0;
+	color: #aaa;
+}
+#usgsfootertext a {
+	color: #777;
+}
+#usgsfootertext img {
+	border: none;
+	float: right;
+	margin-right: 5px;
+}
+</style>
+<script type="text/javascript">
+window.onload = function initialize(){
+   console.log("Initializing.");
+	 document.getElementById("waterdepth").defaultValue = "20.";
+	 document.getElementById("waveheight").defaultValue = "2";
+	 document.getElementById("waveper").defaultValue = "10.";
+	 document.getElementById("wavedir").defaultValue = "0.";
+	 document.getElementById("cspeed").defaultValue = "0.2";
+	 document.getElementById("cdir").defaultValue = "0.";
+	 document.getElementById("gsize").defaultValue = "100.";
+	// document.getElementByID("stress").defaultValue = "0";//
+	 recalc();
+	 return true;
+}
+
+function writeDate() {
+   document.write("<p>" + Date() + "</p>");
+}
+
+/** TODO
+	Consider declaring g, vk, rhos, rhow as global?
+	Allow units conversion for output?
+	Add calc. of rhow from temperature and salinity?
+	Allow alternate models (or do on another web page)?
+/*
+
+/** Hyperbolic sin
+ * @param u (number) argument
+ * @return sinh(u) (number) result
+ * See <a href="refs.html">Beyer (1978)</a> p.252.
+ */
+function sinh( u ){
+   return (0.5*(Math.exp(u)-Math.exp(-u)) );
+}
+
+/** Hyperbolic tangent
+ * @param u (number) argument
+ * @return tanh(u) (number) result
+ * See <a href="refs.html">Beyer (1978)</a> p.252.
+ */
+function tanh( u ){
+   return( (Math.exp(u)-Math.exp(-u))/(Math.exp(u)+Math.exp(-u)) );
+}
+
+/** Hyperbolic cosine
+ * @param u (number) argument
+ * @return cosh(u) (number) result
+ * See <a href="refs.html">Beyer (1978)</a> p.252.
+*/
+function cosh( u ){
+   return( 0.5*(Math.exp(u)+Math.exp(-u)) );
+}
+
+/** log base 10
+ * @param u (number) argument
+ * @return log10(u) (number) result
+ * See <a href="refs.html">Beyer (1978)</a> p.214.
+ */
+function log10( u ){
+   return( Math.log(u) / Math.LN10 );
+}
+
+/** Compute kh = wavenumber * depth for wave disperson equation
+ * @param w (number) omega = 2*pi/T where T is period (1/s)
+ * @param h (number) water depth (m)
+ * @return kh (number)
+ *
+ * Calculated using Newton-Raphson iteration of Eqn. 7 in
+ * Soulsby (2006) "Simplified calculation of wave orbital velocities"
+ * Report TR 155 Release 1.0 Feb 2006. HR Wallingford.
+ * (Section 2.1)
+ */
+function qkhfs( w, h ){
+   var g = 9.81;
+	 var x = Math.pow(w,2.)*h/g;
+   var y = x;
+	 if(x<1)
+	 	 y = Math.sqrt(x);
+	 /* three iterations are enough: */
+	 t = tanh( y );
+	 y	 = y-( (y *t -x)/(t+y*(1.-Math.pow(t,2.))));
+	 t = tanh( y );
+	 y	 = y-( (y *t -x)/(t+y*(1.-Math.pow(t,2.))));
+	 t = tanh( y );
+	 y	 = y-( (y *t -x)/(t+y*(1.-Math.pow(t,2.))));
+	 var kh=y;
+	 return kh;
+}
+
+/** Calculate orbital velocity under JONSWAP spectra
+ * @param Hs (number) significant wave height (m)
+ * @param Tz (number) zero-upcrossing wave period (s)
+ * @param h  (number) water depth (m)
+ * @returns uRMS (number) RMS orbital velocity (m/s)
+ *
+ * Calculated using Soulby exponential approximation from
+ * Soulsby (2006) "Simplified calculation of wave orbital velocities"
+ * Report TR 155 Release 1.0 Feb 2006. HR Wallingford.
+ * (Section 3.2, equation 28).
+ *
+ * Note:
+ *   1.28*Tz ~= Tp
+ *   sqrt(2)*uRMS = ubr (the monochromatic wave with same variance)
+ */
+function uRMS_Soulsby( Hs, Tz, h ){
+   var term = -Math.pow( (3.65/Tz)*Math.sqrt(h/9.81), 2.1 );
+   var uRMS = (Hs/4.)*Math.sqrt(9.81/h)*Math.exp(term)
+   return uRMS;
+}
+
+/** Calculate wave-orbital velocity under monochromatic waves
+ */
+function ubMono( H, T, h ){
+   var w = 2.*Math.PI/T;
+	 var kh = qkhfs( w, h );
+	 var ub = (H/2.)*w/(sinh(kh));
+	 return ub;
+}
+
+function fwc94( cmu, cukw ){
+/** FWC94 - Wave-current friction factor
+ * Equations 32 and 33 in Madsen, 1994
+ */
+   var fwc = .00999; /*meaningless (small) return value */
+   if( cukw <= 0. ){
+      console.log("ERROR: cukw too small in fwc94: ",cukw)
+      return fwc;
+   }
+   if( cukw < 0.2 ) {
+      fwc = Math.exp( 7.02*Math.pow(0.2, -0.078) - 8.82 );
+      console.log("WARNING: cukw very small in fwc94: ",cukw);
+   }
+   if( (cukw >= 0.2) && (cukw <= 100.) ){
+      fwc = cmu*Math.exp( 7.02*Math.pow(cukw, -0.078)-8.82 );
+	 }
+   else if( (cukw > 100.) && (cukw <= 10000.) ){
+      fwc = cmu*Math.exp( 5.61*Math.pow(cukw, -0.109)-7.30 );
+	 }
+   else if( cukw > 10000.){
+      fwc = cmu*Math.exp( 5.61*Math.pow(10000., -0.109)-7.30 );
+	 }
+   return fwc;
+}
+
+function m94( ubr, wr, ucr, zr, phiwc, kN, /* optional */ iverbose ){
+/** m94 - Grant-Madsen model from Madsen (1994)
+ *
+%   Input:
+%      ubr = rep. wave-orbital velocity amplitude outside wbl [m/s]
+%      wr = rep. angular wave frequency = 2pi/T [rad/s]
+%      ucr = current velocity at height zr [m/s]
+%      zr = reference height for current velocity [m]
+%      phiwc = angle between currents and waves at zr (radians)
+%      kN = bottom roughness height (e.q. Nikuradse k) [m]
+%      iverbose = switch; when 1, extra output
+%   Returned in array:
+%      ustrc  = current friction velocity         u*c [m/s]
+%      ustrr  = w-c combined friction velocity    u*r [m/s]
+%      ustrwm = wave max. friction velocity      u*wm [m/s]
+%      dwc = wave boundary layer thickness [m]
+%      fwc = wave friction factor [ ]
+%      zoa = apparent bottom roughness [m]
+%
+% Chris Sherwood, USGS
+% November 2005: Removed when waves == 0
+% July 2005: Removed bug found by JCW and RPS
+ * January 2015 converted to Javascript
+*/
+   var iverbose = iverbose || 0;
+   var MAXIT = 20;
+   var vk = 0.41;
+	 /* default values */
+	 var fwc = .4;
+	 var dwc = kN;
+	 var zo = kN/30.;
+	 var zoa = zo;
+   var rmu = [1.];
+   var Cmu =[1.];
+   var fwci=[.4];
+   var dwci=[kN];
+   var ustrwm2=[0.01];
+   var ustrr2=[0.01];
+   var ustrci=[0.01];
+   /* ...some data checks */
+   if( wr <= 0. ){
+      console.log("WARNING: Bad value for frequency in M94: ",wr );
+	    return [NaN, NaN, NaN, dwc, fwc, zoa];
+   }
+   if( ubr < 0. ){
+      console.log("WARNING: Bad value for orbital vel. in M94: ",ubr);
+      return [ustrc, NaN, ustrc, dwc, fwc, zoa];
+   }
+   if( kN < 0. ){
+	    console.log("WARNING: Wierd value for roughness in M94: ",kN);
+   }
+   if( (zr<zoa || zr<0.05) && iverbose==1){
+	    consloe.log("WARNING: Low value for ref. level in M94: ",zr);
+	 }
+   if(ubr <= 0.01){
+      if(ucr <= 0.01){
+         /* ...no waves or currents */
+         ustrc = 0.;
+         ustrwm = 0.;
+         ustrr = 0.;
+         return [ustrc, ustrwm, ustrr, dwc, fwc, zoa];
+      }
+      /* ...no waves */
+      ustrc = ucr * vk / Math.log(zr/zoa); 
+      ustrwm = 0.;
+      ustrr = ustrc;
+      return [ustrc, ustrwm, ustrr, dwc, fwc, zoa];
+   }
+   var cosphiwc =  Math.abs(Math.cos(phiwc));
+   rmu[0] = 0.;
+   Cmu[0] = 1.;
+   fwci[0] = fwc94( Cmu[0], (Cmu[0]*ubr/(kN*wr)) );    /* Eqn. 32 or 33 */
+   ustrwm2[0]= 0.5*fwci[0]*ubr*ubr;                    /* Eqn. 29 */
+   ustrr2[0] = Cmu[0]*ustrwm2[0];                      /* Eqn. 26 */
+   ustrr = Math.sqrt( ustrr2[0] );
+   dwci[0] = kN;
+   if ((Cmu[0]*ubr/(kN*wr)) >= 8.) dwci[0]= 2.*vk*ustrr/wr;
+   var lnzr = Math.log(zr/dwci[0]);
+   var lndw = Math.log(dwci[0]/zo);
+   var lnln = lnzr/lndw;
+   var bigsqr = (-1.+Math.sqrt(1.+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr ));
+   ustrci[0] = 0.5*ustrr*lnln*bigsqr;
+   var nit = 0;
+   for (i=1; i<MAXIT; i++){
+	    nit = i;
+      rmu[i] = ustrci[i-1]*ustrci[i-1]/ustrwm2[i-1];
+      Cmu[i] = Math.sqrt(1.+2.*rmu[i]*cosphiwc+rmu[i]*rmu[i]);/* Eqn 27 */
+      fwci[i] = fwc94( Cmu[i], (Cmu[i]*ubr/(kN*wr)) );        /* Eqn. 32 or 33 */
+      ustrwm2[i]= 0.5*fwci[i]*ubr*ubr;                        /* Eqn. 29 */
+      ustrr2[i] = Cmu[i]*ustrwm2[i];                          /* Eqn. 26 */
+      ustrr = Math.sqrt( ustrr2[i] );
+      dwci[i] = kN;
+      if ((Cmu[i]*ubr/(kN*wr))>= 8.) dwci[i]= 2.*vk*ustrr/wr; /* Eqn.36 */
+      lnzr = Math.log( zr/dwci[i] );
+      lndw = Math.log( dwci[i]/zo );
+      lnln = lnzr/lndw;
+      bigsqr = (-1.+Math.sqrt(1.+ ((4.*vk*lndw)/(lnzr*lnzr))*ucr/ustrr ));
+      ustrci[i] = 0.5*ustrr*lnln*bigsqr;                      /* Eqn. 38 */
+      diffw = Math.abs( (fwci[i]-fwci[i-1])/fwci[i] );
+      if(diffw < 0.0005) break;
+   }
+   ustrwm = Math.sqrt( ustrwm2[nit] );
+   ustrc = ustrci[nit];
+   ustrr = Math.sqrt( ustrr2[nit] );
+   zoa = Math.exp( Math.log(dwci[nit])-(ustrc/ustrr)*Math.log(dwci[nit]/zo) ); /* Eqn. 11 */
+   fwc = fwci[nit];
+   dwc = dwci[nit];
+   if(iverbose==1){
+      for(i=0;i<nit;i++){
+         console.log("i ",i,"fwc ",fwci[i],"dwc ",dwci[i],"u*c ",ustrci[i],
+				 "u*wm ",Math.sqrt(ustrwm2[i]),"u*rr ",Math.sqrt(ustrr2[i]))
+      }
+   }
+   return [ustrc, ustrr, ustrwm, dwc, fwc, zoa];
+}
+
+/** Calculate critical Shields parameter and critical shear stress 
+ * @param d (number) grain size (m)
+ * @param rhos (number, optional, default = 2650) sediment density (kg/m3)
+ * @param rhow (number, optional, default = 1027) water density (kg/m3)
+ * @param nu (number, optional, default = 1.36e-6) kinematic viscosity (m2 s-1)
+ * @returns [ Shields_crit, tau_crit ] (array of numbers)
+ */
+function tauCrit ( d, /* optional */ rhos,
+                      /* optional */ rhow,
+											/* optional */ nu ){
+   var rhow = rhow || 1027.;
+	 var rhos = rhos || 2650.;
+	 var nu = nu || 1.36e-6; /* kinematic viscosity m2 s-1 */
+   var g = 9.81;  /* m s-2 */
+   var s = rhos/rhow; /* p. 104 */
+   var Dstar = d * Math.pow( (g*(s-1)/(nu*nu)),(1./3.)); /* Eqn 75 */
+   var Shields_crit = 0.3 /(1.+1.2*Dstar) + 0.055*(1.-Math.exp(-0.020*Dstar)); /* Eqn 77 */
+   var tau_crit = Shields_crit * (g*(rhos-rhow) * d ); /* Eqn 74 (inverse) */
+   return [Shields_crit, tau_crit ];
+}
+
+function recalc() {
+   var rhow = 1027.;
+   var waterdepth = document.getElementById("waterdepth");
+   var waveheight = document.getElementById("waveheight");
+   var waveper = document.getElementById("waveper");
+	 var wavedir = document.getElementById("wavedir");
+	 var cspeed = document.getElementById("cspeed");
+	 var cdir = document.getElementById("cdir");
+	 var gsize = document.getElementById("gsize");
+   
+	 var h = parseFloat(waterdepth.value)*document.waterdepthUnitsConv.unitsFlag.value;
+	 var Hs = parseFloat(waveheight.value)*document.waveheightUnitsConv.unitsFlag.value;;
+	 var Td = parseFloat(waveper.value);
+	 var Dtemp = parseFloat(gsize.value);
+	 var D = Dtemp;
+   /* convert grain size input to meters */
+	 if( document.gsizeUnitsFlag.unitsFlag.value == 0 ){
+	    /* microns */
+			D = 1.e-6 * Dtemp;
+   }
+	 else if( document.gsizeUnitsFlag.unitsFlag.value == 1 ){
+      /* mm */
+			D = 1.e-3 * Dtemp;
+   }
+	 else if( document.gsizeUnitsFlag.unitsFlag.value == 2 ){
+      /* phi */
+			D = 1.e-3 * Math.pow( 2., -Dtemp );
+   }
+	 
+	 var spd = parseFloat(cspeed.value)*document.cspeedUnitsConv.unitsFlag.value;
+	 
+	 var ks = 2.5*D;
+	 var zoa = ks/30.;
+	 var zr = 1.;
+	 var phiwc = 0;
+	 Tz = Td/1.28;
+	 uRMS = uRMS_Soulsby( Hs, Tz, h );
+	 w = 2.*Math.PI / Td;
+	 kh = qkhfs( w, h );
+	 ub = ubMono( Hs, Td, h );
+	 ubr = Math.SQRT2*uRMS;
+	 console.log("m94( ",ubr,", ",w,", ",spd,", ",zr,", ",phiwc,", ",ks,", 1 )")
+	 m94o = m94( ubr, w, spd, zr, phiwc, ks, 1 );
+	 fwc = fwc94(1.,1e5);
+
+   var tauw = rhow*m94o[1]*m94o[1];
+	 var tauc = rhow*m94o[0]*m94o[0];
+	 var taucw = rhow*m94o[2]*m94o[2];
+   fwc = m94o[4];
+	 zoa = m94o[5];
+	 var tauCrito = tauCrit( D );
+	 var taucr = tauCrito[0];
+	 
+	 ubOut.innerHTML = (ubr/document.ubUnitsConv.unitsFlag.value).toFixed(3);
+	 fwcOut.innerHTML = (fwc/document.fwcUnitsConv.unitsFlag.value).toFixed(3);
+   taucrOut.innerHTML = (taucr/document.taucrUnitsConv.unitsFlag.value).toFixed(3);
+	 tauwOut.innerHTML = (tauw/document.tauwUnitsConv.unitsFlag.value).toFixed(3);
+	 taucOut.innerHTML = (tauc/document.taucUnitsConv.unitsFlag.value).toFixed(3);
+	 taucwOut.innerHTML = (taucw/document.taucwUnitsConv.unitsFlag.value).toFixed(3);
+	 ksOut.innerHTML = (ks/document.ksUnitsConv.unitsFlag.value).toFixed(6);
+	 zoaOut.innerHTML = (zoa/document.zoaUnitsConv.unitsFlag.value).toFixed(6);
+   console.log("Hs,Td,h=",Hs,Td,h);
+	 console.log("kh=",kh); 
+
+}
+</script>
+</head>
+
+<body>
+ <div class="container">
+      <div class="row" style="background-color:#000066;">
+      <div class="eight columns" >
+        	 <img src="images/dark blue usgs logo.png" width="172" height="70" alt="USGS Logo" align="left"/>
+       </div>
+      
+       <div class="four columns">
+       		<p style="color:#fff; text-align:right;"><br/><a style="color:#fff;" href="http://www.usgs.gov">USGS Home</a><br/>
+       			<a style="color:#fff;" href="http://answers.usgs.gov/cgi-bin/gsanswers?tmplt=2/">Contact USGS</a><br/>
+       			<a style="color:#fff;" href="http://search.usgs.gov/">Search USGS</a></p>
+       </div>
+     </div>
+     <div class="row" style="background-color:#666666;">
+       <div class="twelve columns" ><p style="color:#fff; text-align:center; font-weight:bold;"><br/><a style="color:#fff;" href="http://woodshole.er.usgs.gov/">Woods Hole Coastal and Marine Science Center</a></p>
+       </div>
+    </div>
+    <div class="row">
+      <div class="column"><h1>Combined Wave-Current Bottom Stress</h1>
+        <p>Compute combined wave-current bottom stress using the Madsen (1994) model. Wave-orbital velocities are computed from the input wave statistics using the Soulsby (2006) approximation that assumes a JONSWAP spectrum. That calculation uses the zero-crossing period <i>T<sub>z</sub></i>, and we assume 1.28*<i>T<sub>z</sub></i> = <i>T<sub>d</sub></i>, where <i>T<sub>d</sub></i> is the input dominant wave period. It returns the root-mean-square orbital velocity <i>u</i><sub>RMS</sub>. The Madsen (1994) routine requires the representative orbital velocity <i>u<sub>br</sub></i> = sqrt(2)<sup>*</sup><i>u</i><sub>RMS</sub> and the representative period <i>T<sub>r</sub></i>, This program uses <i>T<sub>d</sub></i> as input to the Madsen routine, which may slightly overestimate bottom stress. Current velocities are assumed to be measure 1 m above the bottom (1 mab). The wave direction and current directions are not used.</p>
+<hr>
+<h2>Input</h2>
+      </div>
+      </div>
+<div class="row">
+	<div class="column"><strong>Enter Parameters:</strong></div>
+    <div class="column"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p></div>
+    <div class="column"><strong>Units</strong></div> 
+</div>
+<div class="row"> 
+	<div class="column">Water depth <i>h</i></div>
+    <div class="column"><input id="waterdepth" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    <div class="column"><form action="#" name = "waterdepthUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()"; >
+  							<option value="1.0" selected="selected">    (m)</option>
+   							<option value="0.3048">   (ft)</option>
+							</select></form></strong></div> 
+</div>
+<div class="row"> 
+	<div class="column">Wave height <i>H<sub>s</sub></i></div>
+    <div class="column"><input id="waveheight" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    <div class="column"><form action="#" name = "waveheightUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+						   <option value="1.0" selected="selected">    (m)</option>
+						   <option value="0.3048">   (ft)</option>
+							</select></form></div> 
+</div>
+<div class="row"> 
+	<div class="column">Wave period <i>T<sub>d</sub></i></div>
+    <div class="column"><input id="waveper" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    <div class="column"><form action="#" name = "unitsIN" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0">    (s)</option>
+							</select></form></div> 
+</div>
+<div class="row"> 
+	<div class="column">Wave direction</div>
+    <div class="column"><input id="wavedir" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    
+    <div class="column"><form action="#" name = "unitsIN" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0">  (deg)</option>
+							</select></form></div> 
+</div>
+
+<div class="row"> 
+	
+	<div class="column">Current speed <br>
+    at 1 mab</div>
+    <div class="column"><input id="cspeed" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    
+    <div class="column"> <form action="#" name = "cspeedUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">  (m/s)</option>
+   							<option value="0.44704">  (mph)</option>
+   							<option value="0.51444">(knots)</option>
+                            <option value="0.3048">(ft/s)</option>
+							</select></form> </div> 
+</div>
+<div class="row"> 
+	
+	<div class="column">Current direction</div>
+    <div class="column"><input id="cdir" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    
+    <div class="column"><form action="#"  name = "unitsIN" >
+							<select  class="units"  name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0">   (deg)</option>
+							</select></form></div> 
+</div>
+<div class="row"> 
+    <div class="column">Grain size <i>D</i><sub>50</sub></div>
+    <div class="column"><input id="gsize" onchange="recalc()";
+							onpaste="this.onchange()"; oninput="this.onchange()";
+							onkeypress="this.onchange()";onblur="this.onchange()";></div>
+    <div class="column"><form action="#"  name = "gsizeUnitsFlag" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="0"> (microns)</option>
+	 						<option value="1">    (mm)  </option>
+	 						<option value="2">   (phi)  </option>
+							</select></form></div> 
+</div>
+<div class="row"> 
+  <div class="twelve columns">
+  <hr/>
+  <h3>Results</h3>
+  </div> 
+</div>
+<div class="row">
+    <div class="column">Wave-orbital velocity <i>u<sub>br</sub></i></div>
+    <div class="column"><span class="output" id="ubOut"></span> </div>
+    <div class="column"><form action="#" name = "ubUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">  (m/s)</option>
+   							<option value="0.44704">  (mph)</option>
+   							<option value="0.51444">(knots)</option>
+                            <option value="0.3048">(ft/s)</option>
+							</select></form> </div> 
+<div class="row">
+    <div class="column">Grain roughness <i>k<sub>s</sub></i></div>
+    <div class="column"><span class="output" id="ksOut"></span></div>
+    <div class="column"><form action="#" name = "ksUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+						   <option value="1.0" selected="selected">    (m)</option>
+							 <option value="0.001">   (mm)</option>
+							 <option value="0.3048">   (ft)</option>
+						   <option value="0.0254">  (inches)</option>
+							</select></form></div> 
+</div>
+<div class="row">
+	
+    <div class="column">Friction factor <i>f<sub>wc</sub></i></div>
+    <div class="column"><span class="output" id="fwcOut"></span></div>
+    <div class="column"><form action="#"  name = "fwcUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0">( )</option> 						
+							</select></form></div> 
+</div>
+<div class="row">
+	
+    <div class="column">Current shear stress <i>&tau;<sub>*c</sub></i></div>
+    <div class="column"><span class="output" id="taucOut"></span></div>
+    <div class="column"><form action="#"  name = "taucUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">(Pa)</option>
+	 						<option value="1.0">(N/m&sup2;)  </option>
+	 						<option value="0.1">(dynes/cm&sup2;)  </option>
+							</select></form></div> 
+</div>
+<div class="row">
+	
+    <div class="column">Wave shear stress <i>&tau;<sub>*w</sub></i></div>
+    <div class="column"><span class="output" id="tauwOut"></span> </div>
+    <div class="column"><form action="#"  name = "tauwUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">(Pa)</option>
+	 						<option value="1.0">(N/m&sup2;)  </option>
+	 						<option value="0.1">(dynes/cm&sup2;)  </option>
+							</select></form></div> </div>
+</div>
+<div class="row">
+	
+    <div class="column">Apparent bottom roughness <i>z</i><sub>0</sub></div>
+    <div class="column"><span class="output" id="zoaOut"></span></div>
+    <div class="column"><form action="#" name = "zoaUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+						   <option value="1.0" selected="selected">    (m)</option>
+							 <option value="0.001">   (mm)</option>
+							 <option value="0.3048">   (ft)</option>
+						   <option value="0.0254">  (inches)</option>
+							</select></form></div> 
+</div>
+<div class="row">
+	
+    <div class="column">Critical shear stress <i>&tau;<sub>cr</sub></i></div>
+    <div class="column"><span class="output" id="taucrOut"></span></div>
+    <div class="column"><form action="#"  name = "taucrUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">(Pa)</option>
+	 						<option value="1.0">(N/m&sup2;)  </option>
+	 						<option value="0.1">(dynes/cm&sup2;)  </option>
+							</select></form></div> </div>
+
+<div class="row">
+	
+    <div class="column">Wave-current <br>
+    combined stress <i>&tau;<sub>*cw</sub></i></div>
+    <div class="column"><span class="output" id="taucwOut"></span></div>
+    <div class="column"><form action="#"  name = "taucwUnitsConv" >
+							<select class="units" name="unitsFlag" onchange="recalc()";>
+   							<option value="1.0" selected="selected">(Pa)</option>
+	 						<option value="1.0">(N/m&sup2;)  </option>
+	 						<option value="0.1">(dynes/cm&sup2;)  </option>
+							</select></form></div> </div>
+    
+ 
+   <div class="row">
+  <div clas=column"><hr></div></div>
+<div class="row">  
+<div clas="column"><h2>References</h2>
+<p>Madsen, O.S., 1994, Spectral wave-current bottom boundary layer flows: Coastal Engineering 1994. Proceedings, 24th International Conference Coastal Engineering Research Council, p. 384-398. </p>
+<p>  Soulsby, R.L., 1997, Dynamics of Marine Sands: London, Thomas Telford, 249 p.</p>
+   
+<p>  Soulsby, R.L., 2006, Simplified calculation of wave orbital velocities: HR Wallingford Ltd TR-155, 12 pp. + figures p.</p>
+<hr>
+<h2>Disclaimer</h2>
+<p>Although this program has been used by the USGS, no warranty, expressed or implied, is made by the USGS or the United States Government as to the accuracy and functioning of the program and related program material nor shall the fact of distribution constitute any such warranty, and no responsibility is assumed by the USGS in connection therewith.</p>
+
+<hr>
+<p> <a href="mailto:csherwood@usgs.gov">csherwood@usgs.gov</a> <br/>
+Last revised: 15 April 2015</p>
+
+<script type="text/javascript">
+writeDate();
+</script></div></div> 
+<div class="row">
+	<!--BEGIN USGS Footer Template -->
+</p><div id="usgsfooter">
+	<p id="usgsfooterbar">
+		<a href="http://www.usgs.gov/laws/accessibility.html" title="Accessibility Policy (Section 508)">Accessibility</a>
+		<a href="http://www.usgs.gov/foia/" title="Freedom of Information Act">FOIA</a>
+		<a href="http://www.usgs.gov/laws/privacy.html" title="Privacy policies of the U.S. Geological Survey.">Privacy</a>
+		<a href="http://www.usgs.gov/laws/policies_notices.html" title="Policies and notices that govern information posted on USGS Web sites.">Policies and Notices</a>
+	</p>
+	
+	<p id="usgsfootertext">
+		
+		<a href="http://usa.gov/"><img src="images/footer_graphic_usagov.jpg" alt="USA.gov logo" title="USAGov: Government Made Easy" width="90" height="26" /></a>
+		<a href="http://www.doi.gov/">U.S. Department of the Interior</a> |
+		<a href="http://www.usgs.gov/">U.S. Geological Survey</a><br />
+		URL: http://woodshole.er.usgs.gov/<!--#echo var="DOCUMENT_URI"--><br /><br />
+
+		Page Contact Information: <a href="http://woodshole.er.usgs.gov/feedback.html">Feedback</a><br />
+
+		Page Last Modified: <TIME><!--#echo var="LAST_MODIFIED" --><!--INSERT TIME WITH APPROVED AND POSTED--></TIME> 
+		<!--MODIFIER'S INITIALS IN PARENTHESES-->(GW)
+	</p>
+</div>
+<!-- END USGS Footer Template -->
+</div>
+   </div> 
+    </div>
+  </div>
+</body>
+</html>
