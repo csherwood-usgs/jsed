@@ -1,4 +1,7 @@
 # jsed
+
+The tools can be run from here: http://csherwood-usgs.github.io/jsed/
+
 Javascript/HTML5/CSS files that implement some oceanographic and sediment-transport calculations.
 
 These routines replace the sedx applets, which no longer work with modern Java.
